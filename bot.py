@@ -55,6 +55,13 @@ async def delete_reminder(ctx, reminder_id):
     response = rem.delete_reminder(reminder_id)
     await ctx.send(response)
 
+@bot.event
+async def on_command_error(ctx, error):
+    error_msg = f'Unhandled error occurred: {error}'
+    if isinstance(error, commands.BadArgument):
+        error_msg = 'I could not find that member...'
+    await ctx.send(error_msg)
+
 @tasks.loop(seconds=60)  # task runs every 60 seconds
 async def reminder_task():
     # print(datetime.now())

@@ -1,0 +1,9 @@
+# ignore everything
+**
+.*
+
+# Allow files and directories
+!*.py
+!.env
+!*requirements.txt
+!README.md

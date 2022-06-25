@@ -1,0 +1,4 @@
+services:
+  reminder-bot:
+    build:
+      dockerfile: ./Dockerfile
