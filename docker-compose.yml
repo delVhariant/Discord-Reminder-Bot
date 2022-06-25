@@ -1,5 +1,5 @@
 services:
   reminder-bot:
-    name: reminder-bot
+    container_name: reminder-bot
     build:
       dockerfile: ./Dockerfile
