@@ -2,9 +2,11 @@
 import os
 import random
 import threading
+import time
 from dotenv import load_dotenv
 from reminders import Reminders
 from datetime import datetime, timedelta
+
 # from crontabs import Cron, Tab
 
 # 1
@@ -68,6 +70,7 @@ async def reminder_task():
     active = rem.get_active_reminders()
     send_reminders = {}
     for reminder in active:
+        print(reminder)
         channel_id = reminder['channel']
         interval = reminder['interval']
         last_run = reminder['last_run']
@@ -76,12 +79,12 @@ async def reminder_task():
                 send_reminders[channel_id] = []
             send_reminders[channel_id].append(reminder)
         else:
-            time = datetime.fromtimestamp(last_run)
-            if interval == "daily" and datetime.now() > (time + timedelta(days=1)):
+            cur_time = time.time()
+            if interval == "daily" and cur_time > (last_run + timedelta(days=1).total_seconds()):
                 send_reminders[channel_id].append(reminder)
-            elif interval == "weekly" and datetime.now() > (time + timedelta(weeks=1)):
+            elif interval == "weekly" and cur_time > (last_run + timedelta(weeks=1).total_seconds()):
                 send_reminders[channel_id].append(reminder)
-            elif interval == "monthly" and datetime.now() > (time + timedelta(months=1)):
+            elif interval == "monthly" and cur_time > (last_run + timedelta(months=1).total_seconds()):
                 send_reminders[channel_id].append(reminder)
 
 

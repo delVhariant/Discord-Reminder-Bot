@@ -5,7 +5,7 @@ from datetime import datetime
 class Reminders:
 
     def __init__(self):
-        con = sqlite3.connect('reminders.sqlite')
+        con = sqlite3.connect('./data/reminders.sqlite')
         # Create table if it doesn't exist
         con.execute('''CREATE TABLE IF NOT EXISTS reminders
                (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -95,7 +95,7 @@ class Reminders:
         
 
     def get_connection(self, mode='rw'):        
-        con = sqlite3.connect(f'file:reminders.sqlite?mode={mode}', uri=True)
+        con = sqlite3.connect(f'file:./data/reminders.sqlite?mode={mode}', uri=True)
         con.row_factory = sqlite3.Row
         return con
         

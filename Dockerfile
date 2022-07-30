@@ -4,6 +4,7 @@ FROM python:3.10.5-slim-buster
 
 WORKDIR /app
 
+RUN mkdir data
 RUN echo "Australia/Melbourne" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 
