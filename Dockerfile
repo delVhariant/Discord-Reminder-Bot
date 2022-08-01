@@ -7,8 +7,8 @@ WORKDIR /app
 COPY ./requirements.txt requirements.txt
 RUN pip3 install --timeout=60 -r requirements.txt
 
-COPY ./*.py .
-COPY .env .
+COPY . .
+
 
 RUN mkdir /app/data
 
