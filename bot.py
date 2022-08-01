@@ -3,11 +3,11 @@ import os
 import random
 import threading
 import time
+import logging
 from dotenv import load_dotenv
 from reminders import Reminders
 from datetime import datetime, timedelta
 
-# from crontabs import Cron, Tab
 
 # 1
 from discord.ext import commands, tasks
@@ -16,9 +16,12 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 bot = commands.Bot(command_prefix='!')
 rem=Reminders()
 
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
+
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} has connected to Discord!')
+    logging.info(f'{bot.user.name} has connected to Discord!')
     reminder_task.start() # important to start the loop
 
 @bot.command(name='rem-help', help='prints help information')
@@ -70,7 +73,6 @@ async def reminder_task():
     active = rem.get_active_reminders()
     send_reminders = {}
     for reminder in active:
-        print(reminder)
         channel_id = reminder['channel']
         interval = reminder['interval']
         last_run = reminder['last_run']
@@ -91,7 +93,9 @@ async def reminder_task():
     for c, reminders in send_reminders.items():
         channel = await bot.fetch_channel(c)
         for r in reminders:
-            await channel.send(f"{r['interval']} Reminder for {r['user']}!: {r['message']}")
+            rem_string = f"{r['interval']} Reminder for {r['user']}!: {r['message']}"
+            logging.info(f"Triggering reminder: {rem_string}.")
+            await channel.send(rem_string)
             rem.update_last_run(r['id'])
 
 

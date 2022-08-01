@@ -1,7 +1,9 @@
 import sqlite3
 from datetime import datetime
+import logging
 # Simple reminder manager that provides functions to create, list and stop reminders.
 # Reminders will be stored in reminders.db
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 class Reminders:
 
     def __init__(self):
@@ -43,6 +45,7 @@ class Reminders:
             con.commit()
             con.close()
             response= f'New reminder created for {user}: {message}, starting at: {start} repeat at interval: {repeat}'
+            logging.info(response)
         return response
 
     def list_reminders(self):
@@ -57,6 +60,7 @@ class Reminders:
     def update_last_run(self, reminder_id):
         con = self.get_connection()
         last_run = datetime.now().timestamp()
+        logging.debug(last_run)
         con.execute(f"UPDATE reminders SET last_run = {last_run} WHERE id = {reminder_id}")
         con.commit()
         con.close()
@@ -67,7 +71,9 @@ class Reminders:
         con.commit()
         rem = con.execute(f'SELECT * FROM reminders WHERE id = {reminder_id}').fetchone()
         con.close()
-        return f"Reminder: {rem['id']} - {rem['message']} for user: {rem['user']} is paused."
+        response = f"Reminder: {rem['id']} - {rem['message']} for user: {rem['user']} is paused."
+        logging.info(response)
+        return response
 
     def unpause_reminder(self, reminder_id):
         con = self.get_connection()
@@ -75,7 +81,10 @@ class Reminders:
         con.commit()
         rem = con.execute(f'SELECT * FROM reminders WHERE id = {reminder_id}').fetchone()
         con.close()
-        return f"Reminder: {rem['id']} - {rem['message']} for user: {rem['user']} is unpaused."
+        response = f"Reminder: {rem['id']} - {rem['message']} for user: {rem['user']} is unpaused."
+        logging.info(response)
+        return response
+
 
     def delete_reminder(self, reminder_id):
         con = self.get_connection()
@@ -84,7 +93,9 @@ class Reminders:
         con.execute(f"DELETE FROM reminders WHERE id = {reminder_id}")
         con.commit()
         con.close()
-        return f"Reminder: {rem['id']} - {rem['message']} for user: {rem['user']} is deleted."
+        response = f"Reminder: {rem['id']} - {rem['message']} for user: {rem['user']} is deleted."
+        logging.info(response)
+        return response
 
     def get_active_reminders(self):
         con = self.get_connection('ro')
